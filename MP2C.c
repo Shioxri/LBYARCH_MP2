@@ -5,16 +5,7 @@
 extern void imgCvtGrayFloatToInt(int row, int col, float* imgArr, int* convertedArr);
 
 
-void randomValueGenerator(int row, int col, float* imgArr, int sameValue) {
-	int i;
-    float value = (float)rand() / RAND_MAX;  
-    for (i = 0; i < row * col; i++) {
-        imgArr[i] = sameValue ? value : (float)rand() / RAND_MAX; 
-    }
-}
-
-
-void timeAssemblyFunction(int row, int col, int sameValue) {
+void timeAssemblyFunction(int row, int col, int sameValue, float value) {
     int i;
     float* imgArr = (float*)malloc(row * col * sizeof(float));
     int* convertedArr = (int*)malloc(row * col * sizeof(int));
@@ -23,7 +14,9 @@ void timeAssemblyFunction(int row, int col, int sameValue) {
         return;
     }
 
-    randomValueGenerator(row, col, imgArr, sameValue);
+    for (i = 0; i < row * col; i++) {
+        imgArr[i] = (sameValue == 1) ? value : (float)rand() / RAND_MAX;
+    }
 
     struct timespec start, end;
     long total_time_ns = 0;
@@ -47,14 +40,30 @@ void timeAssemblyFunction(int row, int col, int sameValue) {
 
 void manualInputMode() {
     int row, col;
-	int i;
-	int j;
-    	
-    printf("Input Row size: ");
-    scanf("%d", &row);
-    printf("Input Column size: ");
-    scanf("%d", &col);
+    int i, j;
+    float value;
+    char input[100];
 
+    do {
+        printf("Input Row size: ");
+        fgets(input, sizeof(input), stdin); 
+
+        if (sscanf(input, "%d", &row) != 1 || row <= 0) {
+            printf("Invalid input! Please enter a positive integer for row size.\n");
+        } else {
+            break;
+        }
+    } while (1);  
+    do {
+        printf("Input Column size: ");
+        fgets(input, sizeof(input), stdin); 
+        if (sscanf(input, "%d", &col) != 1 || col <= 0) {
+            printf("Invalid input! Please enter a positive integer for column size.\n");
+        } else {
+            break;
+        }
+    } while (1); 
+	
     float* imgArr = (float*)malloc(row * col * sizeof(float));
     int* convertedArr = (int*)malloc(row * col * sizeof(int));
 
@@ -62,12 +71,32 @@ void manualInputMode() {
         printf("Memory allocation failed.\n");
         return;
     }
-    
 
-    printf("Input Array Values:\n");
+    printf("Input Array Values (each value must be between 0 and 1):\n");
     for (i = 0; i < row; i++) {
         for (j = 0; j < col; j++) {
-            scanf("%f", &imgArr[i * col + j]);
+            do {
+			    printf("Enter value for (R%d, C%d): ", i + 1, j + 1);
+			
+			    if (fgets(input, sizeof(input), stdin) == NULL) {
+			        printf("Error reading input. Please try again.\n");
+			        continue;
+			    }
+
+			    int result = sscanf(input, "%f", &value);
+			
+			    if (result != 1) {
+			        printf("Invalid input! Please enter a valid number.\n");
+			        continue;  
+			    }
+			
+			    if (value < 0.0 || value > 1.0) {
+			        printf("Invalid input! Value must be between 0 and 1.\n");
+			    }
+
+			} while (value < 0.0 || value > 1.0);  
+
+            imgArr[i * col + j] = value;
         }
     }
 
@@ -80,7 +109,8 @@ void manualInputMode() {
         }
         printf("\n");
     }
-	printf("\n");
+    printf("\n");
+
     free(imgArr);
     free(convertedArr);
 }
@@ -90,18 +120,34 @@ void timedTestingMode() {
     int sizes[3][2] = {{10, 10}, {100, 100}, {1000, 1000}};
     int sameValue;
 	int i;
-    printf("\nSelect pixel value mode:\n");
-    printf("1. All pixels have the same value\n");
-    printf("2. All pixels have different values\n");
-    printf("Enter your choice: ");
-    scanf("%d", &sameValue);
+	char input[100];
+	float value = (float)rand() / RAND_MAX;  
 
-    sameValue = (sameValue == 1) ? 1 : 0;  
+        printf("\nSelect pixel value mode:\n");
+        printf("1. All pixels have the same value\n");
+        printf("2. All pixels have different values\n");
+    do {
+        printf("Enter your choice: ");
+        fgets(input, sizeof(input), stdin); 
+
+        if (sscanf(input, "%d", &sameValue) != 1 || (sameValue != 1 && sameValue != 2)) {
+            printf("Invalid choice! Please enter 1 or 2.\n");
+        } else {
+            break;
+        }
+    } while (1);  
+	
+    sameValue = (sameValue == 1) ? 1 : 0;  	
+    
+    if (sameValue == 1) {
+    	printf("\nValue Used: %.4f", value);
+	}
+
 	printf("\nAverage time for 30 Runs:\n");
     for (i = 0; i < 3; i++) {
         int row = sizes[i][0];
         int col = sizes[i][1];
-        timeAssemblyFunction(row, col, sameValue);
+        timeAssemblyFunction(row, col, sameValue, value);
     }
     printf("\n");
 }
@@ -130,9 +176,11 @@ int main() {
         } else {
             printf("Invalid choice. Please try again.\n");
         }
-
+        	
+	
         printf("Enter y/Y to continue, enter any other key to exit: ");
-        scanf(" %c", &continueChoice);
+        scanf(" %c", &continueChoice); 
+		while ((getchar()) != '\n'); 
     } while (continueChoice == 'y' || continueChoice == 'Y');
 
     printf("Exiting program. Goodbye!\n");
