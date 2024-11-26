@@ -9,7 +9,7 @@ void randomValueGenerator(int row, int col, float* imgArr, int sameValue) {
 	int i;
     float value = (float)rand() / RAND_MAX;  
     for (i = 0; i < row * col; i++) {
-        imgArr[i] = sameValue ? value : (float)rand() / RAND_MAX; 
+        imgArr[i] = (sameValue == 1) ? value : (float)rand() / RAND_MAX;
     }
 }
 
@@ -47,9 +47,9 @@ void timeAssemblyFunction(int row, int col, int sameValue) {
 
 void manualInputMode() {
     int row, col;
-	int i;
-	int j;
-    	
+    int i, j;
+    float value;
+
     printf("Input Row size: ");
     scanf("%d", &row);
     printf("Input Column size: ");
@@ -62,12 +62,18 @@ void manualInputMode() {
         printf("Memory allocation failed.\n");
         return;
     }
-    
 
-    printf("Input Array Values:\n");
+    printf("Input Array Values (each value must be between 0 and 1):\n");
     for (i = 0; i < row; i++) {
         for (j = 0; j < col; j++) {
-            scanf("%f", &imgArr[i * col + j]);
+            do {
+                printf("Enter value for position (%d, %d): ", i + 1, j + 1);
+                scanf("%f", &value);
+                if (value < 0.0 || value > 1.0) {
+                    printf("Invalid input! Value must be between 0 and 1.\n");
+                }
+            } while (value < 0.0 || value > 1.0); // Loop until valid input is provided
+            imgArr[i * col + j] = value;
         }
     }
 
@@ -80,7 +86,8 @@ void manualInputMode() {
         }
         printf("\n");
     }
-	printf("\n");
+    printf("\n");
+
     free(imgArr);
     free(convertedArr);
 }
