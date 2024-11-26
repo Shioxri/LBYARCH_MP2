@@ -82,7 +82,7 @@ void manualInputMode() {
 			        printf("Error reading input. Please try again.\n");
 			        continue;
 			    }
-
+				
 			    int result = sscanf(input, "%f", &value);
 			
 			    if (result != 1) {
@@ -186,5 +186,3 @@ int main() {
     printf("Exiting program. Goodbye!\n");
     return 0;
 }
-
-
