@@ -34,7 +34,6 @@ ARRAY_LOOP:
     jmp ARRAY_LOOP    
 
 DONE:
-    ; Restore registers and return
     pop rsi
     pop rdi
     pop rbx
