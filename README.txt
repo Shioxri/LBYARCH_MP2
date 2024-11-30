@@ -5,11 +5,19 @@ copy paste to compile and run
 > MP2C.exe
 
 Members:
-Belardo, Gerard
+Belardo, Gerard Vito
 Yu, Cedric
+
+Demo Video:
+https://drive.google.com/file/d/1SKWoO4pgOjY9OPzfeqSCxgLhqHfYAm_-/view?usp=sharing
 
 i.) execution time and short analysis of the performance
 
+Device Used for Testing: Legion 5 16IRX9
+Specs:
+Processor: 13th Gen Intel(R) Core(TM) i7-13650HX 2.60 GHz
+RAM: 16 GB
+System: 64-Bit OS, x64-based processor 
 
 The average execution times, measured over 30 runs for different input sizes and pixel value scenarios, are shown in the table:
 
@@ -21,18 +29,19 @@ The average execution times, measured over 30 runs for different input sizes and
 | 1000 x 1000       | 1,125,430.00               | 685,426.67                       |
 +-------------------+----------------------------+----------------------------------+
 
-Performance analysis
+Performance analysis:
 
-The algorithm processes each pixel in the input image by sequentially applying several operations: loading the floating-point value from memory, 
-multiplying it by 255 using SIMD instructions (mulss), rounding the result to the nearest integer (roundss), converting it to an integer (cvttss2si), 
-and storing the resulting value in the output array. Moreover, applying the concepts in our algorithms and complexity course, the algorithm has a 
-linear time complexity of O(n x m), where the n x m value represents the total number of pixels.
+The algorithm processes each pixel in the input image by sequentially performing several operations: loading the floating-point value from memory, 
+multiplying it by 255 (based on the given specs), using SIMD instructions (mulss), rounding the result with Round-To-Nearest-Ties-To-Even 
+(roundss, with 0x00 determining the rounding type), converting it to an integer (cvttss2si), and finally storing the resulting value in the output array. 
+Moreover, applying the concepts in our algorithms and complexity course, the algorithm has a linear time complexity of O(n x m), 
+where the n x m value represents the total number of pixels/elements in the array.
 
 The execution times show that the performance scales predictably with the image size. Smaller array size such as those 10 x 10 ones tends to have higher 
 per pixel costs which could probably stem from register initialization and how the loop was set up. On the other hand, larger arrays, such as the 100 x 100 
 ones scales proportionally better with the number or amount of pixels.
 
-Pixel uniformity affects performance differently for small and larger arrays. In better terms, smaller arrays leads to faster processing because of simpler 
+Pixel uniformity affects performance differently for small and larger arrays. In other words, smaller arrays leads to faster processing because of simpler 
 memory access. While in larger arrays, the access efficiency and time takes up the execution time reduces the impact of uniformity.
 
 Moreover, The program uses SIMD (Single Instruction Multiple Data) to handle floating-point operations more efficiently, which makes it faster. For larger 

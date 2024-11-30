@@ -156,7 +156,7 @@ void timedTestingMode() {
 int main() {
     int mode;
     char continueChoice;
-
+	srand(time(NULL)); 
     do {
         printf("\nSelect mode:\n");
         printf("1. Manual Input Mode\n");
