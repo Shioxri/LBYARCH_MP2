@@ -8,10 +8,16 @@ Members:
 Belardo, Gerard Vito
 Yu, Cedric
 
+
+
+i.) execution time and short analysis of the performance (found below)
+ii.) attached as CorrectnessCheck.png as well as shown on the video
+iii.)
 Demo Video:
 https://drive.google.com/file/d/1SKWoO4pgOjY9OPzfeqSCxgLhqHfYAm_-/view?usp=sharing
 
-i.) execution time and short analysis of the performance
+
+
 
 Device Used for Testing: Legion 5 16IRX9
 Specs:
